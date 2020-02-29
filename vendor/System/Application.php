@@ -125,4 +125,8 @@ class Application
         $obj = $this->providers()[$key];
         return new $obj;
     }
+    public function run()
+    {
+        $this->session->start();
+    }
 }
