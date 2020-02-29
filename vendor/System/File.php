@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace System;
 
-
 class File
 {
     /**
@@ -49,5 +48,4 @@ class File
     {
         return require $this->path($file);
     }
-
 }

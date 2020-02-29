@@ -51,8 +51,8 @@ class Application
         } else {
             $file = 'vendor/' . $class . '.php';
         }
-        if ($this->file->exists($file)) {
 
+        if ($this->file->exists($file)) {
             $this->file->call($file);
         }
     }
@@ -61,9 +61,9 @@ class Application
      * @param $name
      * @return null
      */
-    public function __get($name)
+    public function __get($key)
     {
-        return $this->get($name);
+        return $this->get($key);
     }
 
     /**
@@ -87,9 +87,8 @@ class Application
      * @param string $key
      * @return bool
      */
-    private function isSharing(string $key):bool
+    private function isSharing(string $key): bool
     {
-
         return isset($this->container[$key]);
     }
 
@@ -97,7 +96,7 @@ class Application
      * @param string $key
      * @return bool
      */
-    private function isProviders(string $key):bool
+    private function isProviders(string $key): bool
     {
         return isset($this->providers()[$key]);
     }
@@ -125,8 +124,14 @@ class Application
         $obj = $this->providers()[$key];
         return new $obj;
     }
-    public function run()
+
+    /**
+     * run application
+     */
+    public function run(): void
     {
         $this->session->start();
+        $this->request->prepareUrl();
+        $this->request->url();
     }
 }
