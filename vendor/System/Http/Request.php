@@ -19,14 +19,14 @@ class Request
      */
     public function prepareUrl(): void
     {
-        $script=dirname($this->server('SCRIPT_NAME'));
+        $script = dirname($this->server('SCRIPT_NAME'));
         $requestUri = $this->server('REQUEST_URI');
         if (strpos($requestUri, '?') !== false) {
             list($requestUri, $queryParam) = explode('?', $this->server('REQUEST_URI'));
         }
-        $this->url = rtrim(preg_replace('#^'.$script.'#', '' , $requestUri), '/');
+        $this->url = rtrim(preg_replace('#^/' . $script . '#', '', $requestUri), '/');
 
-        if (! $this->url) {
+        if (!$this->url) {
             $this->url = '/';
         }
         $this->baseUrl = $this->server('REQUEST_SCHEME') . '://' . $this->server('HTTP_HOST') . $script . '';
@@ -56,5 +56,31 @@ class Request
     public function baseUrl(): string
     {
         return $this->baseUrl;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    public function get($key): string
+    {
+        return $_GET[$key];
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    public function post($key): string
+    {
+        return $_POST[$key];
+    }
+
+    /**
+     * @return string
+     */
+    public function method(): string
+    {
+        return $_SERVER['REQUEST_METHOD'];
     }
 }

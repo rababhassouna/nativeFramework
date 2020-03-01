@@ -7,11 +7,25 @@ namespace System;
 class Session
 {
     /**
+     * @var Application $app
+     */
+    private $app;
+
+    /**
+     * Session constructor.
+     * @param Application $application
+     */
+    public function __construct(Application $application)
+    {
+        $this->app = $application;
+    }
+
+    /**
      * start session if not set session id
      */
     public function start(): void
     {
-         ini_set('session.use_only_cookies', "1");
+        ini_set('session.use_only_cookies', "1");
 
         if (!session_id()) {
             session_start();

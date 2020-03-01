@@ -7,6 +7,10 @@ namespace System;
 class Application
 {
     /**
+     * @var instance
+     */
+    private static $instance;
+    /**
      * @var container array
      */
     public $container = [];
@@ -15,7 +19,7 @@ class Application
      * Application constructor.
      * @param File $file
      */
-    public function __construct(File $file)
+    private function __construct(File $file)
     {
         $this->share('file', $file);
         $this->registerClasses();
@@ -38,6 +42,18 @@ class Application
     private function registerClasses(): void
     {
         spl_autoload_register([$this, 'load']);
+    }
+
+    /**
+     * @param $file
+     * @return Application
+     */
+    public static function getInstance($file=null): Application
+    {
+        if (is_null(static::$instance)) {
+            static::$instance = new static($file);
+        }
+        return static::$instance;
     }
 
     /**
@@ -112,6 +128,7 @@ class Application
                 'request' => 'System\\Http\\Request',
                 'response' => 'System\\Http\\Response',
                 'session' => 'System\\Session',
+                'route' => 'System\\Route',
             ];
     }
 
@@ -122,7 +139,7 @@ class Application
     private function createNewObject(string $key): object
     {
         $obj = $this->providers()[$key];
-        return new $obj;
+        return new $obj($this);
     }
 
     /**
@@ -133,5 +150,7 @@ class Application
         $this->session->start();
         $this->request->prepareUrl();
         $this->request->url();
+        $this->file->call('App/routes.php');
+        $this->route->getRoute();
     }
 }
